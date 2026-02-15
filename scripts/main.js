@@ -43,6 +43,7 @@ const SPEED_THRESHOLD = 3.5;            // Speed threshold for slow (blue) vs fa
 const MASS_SCALE = 1e-24;               // Conversion factor: radius units to kg
 const k_B = 1.380649e-23;               // Boltzmann's constant in J/K
 const J_TO_EV = 6.242e18;               // Conversion factor: Joules to eV
+let speedMultiplier = 1.0;              // Global speed multiplier for all particles
 
 function setup() {
   frameRate(60); 
@@ -225,6 +226,21 @@ function setupSliders() {
       // Recalculate demon budget when particle count changes
       demonBudget = calculateMaxSystemEntropy();
       initializeParticles();
+    });
+  }
+  
+  let speedSlider = document.getElementById('speed-slider');
+  if (speedSlider) {
+    speedSlider.addEventListener('input', (e) => {
+      let newMultiplier = parseFloat(e.target.value);
+      let ratio = newMultiplier / speedMultiplier;
+      speedMultiplier = newMultiplier;
+      document.getElementById('speed-value').textContent = speedMultiplier.toFixed(1);
+      
+      // Apply speed change to all existing particles
+      for (let ball of balls) {
+        ball.vel.mult(ratio);
+      }
     });
   }
 }

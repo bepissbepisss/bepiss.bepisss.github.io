@@ -543,6 +543,32 @@ body {
     box-shadow: inset 0 2px 8px rgba(255, 102, 0, 0.4);
 }
 
+.gauge-max-marker {
+    position: absolute;
+    bottom: 50%;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.6),
+                0 0 4px rgba(255, 255, 255, 0.4);
+    z-index: 100;
+    pointer-events: none;
+}
+
+.gauge-max-marker::before {
+    content: 'S_max';
+    position: absolute;
+    right: -45px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 9px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
 .gauge-label {
     position: absolute;
     left: 50%;

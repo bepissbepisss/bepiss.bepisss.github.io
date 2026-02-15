@@ -197,5 +197,14 @@ class Ball {
     stroke(...rimColor);
     strokeWeight(1.5);
     circle(this.pos.x, this.pos.y, this.r * 2);
+
+    // Draw "Ne" text label
+    fill(255, 255, 255, 200);
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textSize(this.r * 1.2);
+    textStyle(BOLD);
+    text('Ne', this.pos.x, this.pos.y);
   }
+  
 }
