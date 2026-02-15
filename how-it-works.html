@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maxwell's Demon - How It Works</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e8eaf6;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        header h1 {
+            font-size: 42px;
+            margin: 0 0 10px 0;
+            color: #ffffff;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-bottom: 30px;
+            padding: 10px 20px;
+            background: rgba(100, 181, 246, 0.2);
+            border: 1px solid rgba(100, 181, 246, 0.4);
+            color: #64b5f6;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .back-button:hover {
+            background: rgba(100, 181, 246, 0.3);
+            border-color: rgba(100, 181, 246, 0.6);
+        }
+        
+        .section {
+            background: rgba(30, 60, 114, 0.3);
+            border: 1px solid rgba(100, 181, 246, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .section h2 {
+            color: #64b5f6;
+            font-size: 24px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(100, 181, 246, 0.3);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .section h3 {
+            color: #00d4ff;
+            font-size: 18px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .math-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 4px solid #00d4ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            overflow-x: auto;
+        }
+        
+        .description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+        
+        .variable-list {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .variable {
+            margin: 8px 0;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .variable-name {
+            font-family: 'JetBrains Mono', monospace;
+            color: #00d4ff;
+            min-width: 100px;
+        }
+        
+        .variable-desc {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .warning-box {
+            background: rgba(255, 102, 0, 0.15);
+            border-left: 4px solid #ff6600;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .info-box {
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 4px solid #00d4ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            border-top: 1px solid rgba(100, 181, 246, 0.1);
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="index.html" class="back-button">← Back to Simulation</a>
+        
+        <header>
+            <h1>Maxwell's Demon Physics</h1>
+            <p>Mathematical foundation of the thermodynamic simulation</p>
+        </header>
+        
+        <!-- Kinetic Energy Section -->
+        <div class="section">
+            <h2>1. Kinetic Energy</h2>
+            
+            <h3>Definition</h3>
+            <p class="description">
+                The kinetic energy of a particle is the energy it possesses due to its motion. In classical mechanics:
+            </p>
+            
+            <div class="math-box">
+                $$E = \frac{1}{2}mv^2$$
+            </div>
+            
+            <p class="description">
+                For our simulation with N particles:
+            </p>
+            
+            <div class="math-box">
+                $$E_{total} = \sum_{i=1}^{N} \frac{1}{2}m_i v_i^2$$
+            </div>
+            
+            <div class="variable-list">
+                <div class="variable">
+                    <span class="variable-name">E</span>
+                    <span class="variable-desc">Kinetic energy (Joules)</span>
+                </div>
+                <div class="variable">
+                    <span class="variable-name">m</span>
+                    <span class="variable-desc">Mass of particle (kg)</span>
+                </div>
+                <div class="variable">
+                    <span class="variable-name">v</span>
+                    <span class="variable-desc">Velocity magnitude (m/s)</span>
+                </div>
+                <div class="variable">
+                    <span class="variable-name">N</span>
+                    <span class="variable-desc">Total number of particles</span>
+                </div>
+            </div>
+            
+            <p class="description">
+                <strong>Note:</strong> Energy is conserved in elastic collisions between particles. In the simulation, we convert pixel-based velocities to m/s using: $v_{m/s} = v_{pixels/frame} \times 0.01$
+            </p>
+        </div>
+        
+        <!-- Temperature Section -->
+        <div class="section">
+            <h2>2. Temperature from Equipartition Theorem</h2>
+            
+            <h3>Equipartition Theorem</h3>
+            <p class="description">
+                For a system in thermal equilibrium, the average kinetic energy is distributed equally among all quadratic degrees of freedom. For 2D motion (x and y components), there are 3 degrees of freedom:
+            </p>
+            
+            <div class="math-box">
+                $$E = \frac{3}{2}Nk_BT$$
+            </div>
+            
+            <p class="description">
+                Solving for temperature:
+            </p>
+            
+            <div class="math-box">
+                $$T = \frac{2E}{3Nk_B}$$
+            </div>
+            
+            <div class="variable-list">
+                <div class="variable">
+                    <span class="variable-name">T</span>
+                    <span class="variable-desc">Temperature (Kelvin)</span>
+                </div>
+                <div class="variable">
+                    <span class="variable-name">E</span>
+                    <span class="variable-desc">Total kinetic energy (Joules)</span>
+                </div>
+                <div class="variable">
+                    <span class="variable-name">N</span>
+                    <span class="variable-desc">Number of particles</span>
+                </div>
+                <div class="variable">
+                    <span class="variable-name">k_B</span>
+                    <span class="variable-desc">Boltzmann's constant = 1.380649 × 10⁻²³ J/K</span>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <strong>Chamber-specific temperatures:</strong> Each chamber's temperature is calculated using only the particles and energy in that chamber, allowing us to observe temperature gradients.
+            </div>
+        </div>
+        
+        <!-- Entropy Section -->
+        <div class="section">
+            <h2>3. Combinatorial Entropy</h2>
+            
+            <h3>The Multiplicity Function</h3>
+            <p class="description">
+                Entropy quantifies the number of microstates (microscopic configurations) corresponding to a macroscopic state. The total entropy has two components:
+            </p>
+            
+            <h3>Spatial Entropy</h3>
+            <p class="description">
+                Distribution of particles across available positions within a chamber:
+            </p>
+            
+            <div class="math-box">
+                $$S_{spatial} = n\ln\left(\frac{n}{n-k}\right) + k\ln\left(\frac{n-k}{k-b}\right) + b\ln\left(\frac{k-b}{b}\right)$$
+            </div>
+            
+            <h3>Combinatorial Entropy (Color Distinguishability)</h3>
+            <p class="description">
+                The entropy from distinguishing between blue and red particles. Using Stirling's approximation:
+            </p>
+            
+            <div class="math-box">
+                $$S_{color} = \ln\left(\frac{k!}{b!(k-b)!}\right) \approx k\ln(k) - k - b\ln(b) + b - (k-b)\ln(k-b) + (k-b)$$
+            </div>
+            
+            <h3>Total System Entropy</h3>
+            <p class="description">
+                Sum of entropy from both chambers:
+            </p>
+            
+            <div class="math-box">
+                $$S_{total} = S_{left} + S_{right}$$
+            </div>
+            
+            <div class="variable-list">
+                <div class="variable">
+                    <span class="variable-name">n</span>
+                    <span class="variable-desc">Number of available microstates (based on chamber area)</span>
+                </div>
+                <div class="variable">
+                    <span class="variable-name">k</span>
+                    <span class="variable-desc">Total particles in chamber</span>
+                </div>
+                <div class="variable">
+                    <span class="variable-name">b</span>
+                    <span class="variable-desc">Blue particles in chamber</span>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <strong>Maximum entropy:</strong> Occurs when colors are equally mixed (b ≈ k/2), creating the characteristic sharp peak in the multiplicity curve.
+            </div>
+        </div>
+        
+        <!-- Szilard Engine Section -->
+        <div class="section">
+            <h2>4. Landauer's Principle & Information Cost</h2>
+            
+            <h3>The Physical Cost of Measurement</h3>
+            <p class="description">
+                Landauer's Principle states that erasing one bit of information has a minimum thermodynamic cost. In the context of Maxwell's Demon:
+            </p>
+            
+            <div class="math-box">
+                $$\Delta S_{min} = k_B T \ln(2)$$
+            </div>
+            
+            <p class="description">
+                <strong>In our simulation:</strong> Every time a particle hits the door area, the demon must measure its properties (blue or red, moving left or right). This measurement costs entropy:
+            </p>
+            
+            <div class="math-box">
+                $$\Delta S_{demon} = k_B T \ln(2) \approx 0.693 \text{ entropy units per measurement}$$
+            </div>
+            
+            <div class="variable-list">
+                <div class="variable">
+                    <span class="variable-name">k_B</span>
+                    <span class="variable-desc">Boltzmann's constant</span>
+                </div>
+                <div class="variable">
+                    <span class="variable-name">T</span>
+                    <span class="variable-desc">Temperature of the system</span>
+                </div>
+                <div class="variable">
+                    <span class="variable-name">ln(2)</span>
+                    <span class="variable-desc">Natural log of 2 ≈ 0.693</span>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <strong>Key observation:</strong> The demon's entropy budget increases by 0.693 units each time a particle approaches the door. This represents the physical cost of gathering information about the particle.
+            </div>
+        </div>
+        
+        <!-- Szilard Engine Section -->
+        <div class="section">
+            <h2>5. Szilard Engine - Managing the Budget</h2>
+            
+            <h3>Budget Constraint</h3>
+            <p class="description">
+                The demon starts with a limited entropy budget (500 units in our simulation). As measurements accumulate, the entropy cost grows:
+            </p>
+            
+            <div class="math-box">
+                $$S_{demon, total} = \sum_{i=1}^{n} k_B T \ln(2)$$
+            </div>
+            
+            <p class="description">
+                When the demon's accumulated entropy reaches 500, the demon can no longer operate (second law of thermodynamics becomes enforceable).
+            </p>
+            
+            <div class="warning-box">
+                <strong>Key insight:</strong> The demon cannot violate the second law because the cost of measurement (entropy increase) exactly offsets any entropy decrease in the system.
+            </div>
+        </div>
+        
+        <!-- Perfect Demon Mode -->
+        <div class="section">
+            <h2>6. Perfect Demon Mode</h2>
+            
+            <h3>Theoretical Ideal</h3>
+            <p class="description">
+                In Perfect Demon mode, particles are instantly sorted according to their type, achieving maximum entropy reduction:
+            </p>
+            
+            <div class="math-box">
+                $$S_{sorted} = 0 \text{ (minimum entropy)}$$
+            </div>
+            
+            <p class="description">
+                However, this mode still tracks the entropy cost as if measurements were being made, demonstrating why such perfect sorting is thermodynamically impossible in reality.
+            </p>
+            
+            <div class="info-box">
+                <strong>Educational use:</strong> Compare the perfect demon's entropy cost against the actual demon's performance to see how constraints of the second law manifest.
+            </div>
+        </div>
+        
+        <!-- Collision Physics -->
+        <div class="section">
+            <h2>7. Collision Physics</h2>
+            
+            <h3>Elastic Collisions</h3>
+            <p class="description">
+                All particle collisions are perfectly elastic, conserving both momentum and kinetic energy:
+            </p>
+            
+            <div class="math-box">
+                $$\vec{p}_{before} = \vec{p}_{after}$$
+                $$E_{before} = E_{after}$$
+            </div>
+            
+            <h3>Collision Detection</h3>
+            <p class="description">
+                Particles collide when the distance between centers is less than the sum of their radii:
+            </p>
+            
+            <div class="math-box">
+                $$d = |\vec{r}_1 - \vec{r}_2| < r_1 + r_2$$
+            </div>
+            
+            <h3>Wall and Door Handling</h3>
+            <p class="description">
+                Particles bounce elastically off chamber walls. When the door is open, particles can pass through if they're in the correct door region. The door detection uses position tracking to prevent tunneling:
+            </p>
+            
+            <div class="math-box">
+                $$\text{Door open} \iff y \in [doorTop, doorBottom] \text{ AND } door_{state} = OPEN$$
+            </div>
+        </div>
+        
+        <!-- Second Law -->
+        <div class="section">
+            <h2>8. The Second Law of Thermodynamics</h2>
+            
+            <h3>Entropy Always Increases (Or Stays Constant)</h3>
+            <p class="description">
+                For an isolated system, total entropy never decreases:
+            </p>
+            
+            <div class="math-box">
+                $$\Delta S_{universe} = \Delta S_{system} + \Delta S_{surroundings} \geq 0$$
+            </div>
+            
+            <h3>Why Maxwell's Demon Fails</h3>
+            <p class="description">
+                In our simulation:
+            </p>
+            <ol style="color: rgba(255, 255, 255, 0.8);">
+                <li><strong>System entropy decreases:</strong> Particles get sorted, reducing entropy</li>
+                <li><strong>Demon entropy increases:</strong> Every measurement at the door costs kT ln(2) in entropy (Landauer's Principle)</li>
+                <li><strong>Total entropy stays constant:</strong> The increase in demon entropy equals the decrease in system entropy</li>
+            </ol>
+            
+            <div class="math-box">
+                $$\Delta S_{total} = \Delta S_{system} + \Delta S_{demon} = 0 \text{ (or positive)}$$
+            </div>
+            
+            <div class="info-box">
+                <strong>Takeaway:</strong> The demon doesn't violate the second law—it highlights its fundamental nature. Information has thermodynamic cost.
+            </div>
+        </div>
+        
+        <footer>
+            <p>Maxwell's Demon - A Thermodynamics Educational Simulation</p>
+            <p>All physics calculations follow standard statistical mechanics and classical mechanics principles.</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError : false
+            });
+        });
+    </script>
+</body>
+
+</html>
